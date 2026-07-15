@@ -33,6 +33,8 @@ vim.opt.smartindent = true
 vim.opt.smarttab = true
 -- Disable use of swapfile
 vim.opt.swapfile = false
+-- Don't fold anything by default
+vim.opt.foldlevelstart = 99
 
 -- No line wrap by default
 vim.opt.wrap = false
@@ -42,30 +44,30 @@ vim.bo.autocomplete = vim.bo.buftype ~= 'prompt'
 
 vim.pack.add({
     -- Color theme
-    {src = "https://github.com/neanias/everforest-nvim"},
+    { src = "https://github.com/neanias/everforest-nvim" },
     -- Config for lsp
-    {src = "https://github.com/neovim/nvim-lspconfig"},
+    { src = "https://github.com/neovim/nvim-lspconfig" },
     -- File picker
-    {src = "https://github.com/folke/snacks.nvim"},
+    { src = "https://github.com/folke/snacks.nvim" },
     -- File browser
-    {src = "https://github.com/X3eRo0/dired.nvim"},
+    { src = "https://github.com/X3eRo0/dired.nvim" },
     -- Dired dependency
-    {src = "https://github.com/MunifTanjim/nui.nvim"},
+    { src = "https://github.com/MunifTanjim/nui.nvim" },
     -- Emacs compile mode in nvim
-    {src = "https://github.com/ej-shafran/compile-mode.nvim"},
-    {src = "https://github.com/nvim-lua/plenary.nvim"},
+    { src = "https://github.com/ej-shafran/compile-mode.nvim" },
+    { src = "https://github.com/nvim-lua/plenary.nvim" },
 
-    {src = 'https://github.com/nvim-tree/nvim-web-devicons'},
-    {src = 'https://github.com/nvim-lualine/lualine.nvim'},
+    { src = 'https://github.com/nvim-tree/nvim-web-devicons' },
+    { src = 'https://github.com/nvim-lualine/lualine.nvim' },
 
     -- Treesitter
-    {src = "https://github.com/nvim-treesitter/nvim-treesitter"},
+    { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
 
     -- Nice scrollbar
-    {src = "https://github.com/lewis6991/satellite.nvim"},
+    { src = "https://github.com/lewis6991/satellite.nvim" },
 
     -- Surround shortcuts
-    {src = "https://github.com/kylechui/nvim-surround"},
+    { src = "https://github.com/kylechui/nvim-surround" },
 })
 
 vim.opt.background = "light"
@@ -96,7 +98,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
         if client and client:supports_method("textDocument/completion") then
             -- Enable native LSP completion for this client + buffer
             vim.lsp.completion.enable(true, client_id, args.buf, {
-                autotrigger = true,   -- auto-show menu as you type (recommended)
+                autotrigger = true, -- auto-show menu as you type (recommended)
                 -- You can also set { autotrigger = false } and trigger manually with <C-x><C-o>
             })
         end
@@ -137,7 +139,8 @@ vim.keymap.set('n', "grf", function() vim.lsp.buf.format() end)
 Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
 Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
 Snacks.toggle.diagnostics():map("<leader>ud")
-Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map("<leader>uc")
+Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map(
+"<leader>uc")
 Snacks.toggle.inlay_hints():map("<leader>uh")
 
 vim.keymap.set('n', '<leader>d', ':Dired %<cr>')
@@ -158,7 +161,7 @@ local treesitter_supported = { 'rust', 'c', 'cpp', 'typst', 'bash', 'lua' }
 treesitter.install(treesitter_supported)
 
 vim.api.nvim_create_autocmd('FileType', {
-    group = vim.api.nvim_create_augroup("tree-sitter-enable", { enable = true }),
+    group = vim.api.nvim_create_augroup("tree-sitter-enable", { clear = true }),
     callback = function(args)
         local lang = vim.treesitter.language.get_lang(args.match)
         if not lang or not vim.treesitter.language.add(lang) then return end
@@ -172,10 +175,9 @@ vim.api.nvim_create_autocmd('FileType', {
         if vim.treesitter.query.get(lang, "folds") then
             vim.opt_local.foldmethod = "expr"
             vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
-  end
+        end
     end,
 })
 
 require("hlslens-setup")
 require("gitsigns-setup")
-
