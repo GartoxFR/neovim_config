@@ -70,6 +70,61 @@ vim.pack.add({
     { src = "https://github.com/kylechui/nvim-surround" },
 })
 
+vim.lsp.config("rust_analyzer", {
+    settings = {
+        ["rust_analyzer"] = {
+            cargo = {
+                allFeatures = true,
+                loadOutDirsFromCheck = true,
+                buildScripts = {
+                    enable = true,
+                },
+            },
+            lru = {
+                capacity = 2048,
+            },
+            -- Add clippy lints for Rust if using rust-analyzer
+            checkOnSave = true,
+            check = {
+                command = "clippy",
+                args = {
+                    "--frozen",
+                    "--offline",
+                    "--",
+                    "-W",
+                    "warnings"
+                }
+            },
+            -- Enable diagnostics if using rust-analyzer
+            diagnostics = {
+                enable = true,
+            },
+            procMacro = {
+                enable = true,
+                ignored = {
+                    ["async-trait"] = { "async_trait" },
+                    ["napi-derive"] = { "napi" },
+                    ["async-recursion"] = { "async_recursion" },
+                },
+            },
+            files = {
+                excludeDirs = {
+                    ".direnv",
+                    ".git",
+                    ".github",
+                    ".gitlab",
+                    "bin",
+                    "node_modules",
+                    "target",
+                    "venv",
+                    ".venv",
+                },
+            },
+        },
+    },
+}
+)
+
 vim.opt.background = "light"
 
 
@@ -140,7 +195,7 @@ Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
 Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
 Snacks.toggle.diagnostics():map("<leader>ud")
 Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map(
-"<leader>uc")
+    "<leader>uc")
 Snacks.toggle.inlay_hints():map("<leader>uh")
 
 vim.keymap.set('n', '<leader>d', ':Dired %<cr>')
