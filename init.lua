@@ -20,11 +20,11 @@ vim.opt.termguicolors = true
 -- Configures the behavior of the insert mode completion menu
 vim.opt.completeopt = "menu,menuone,noselect,popup"
 -- Number of spaces that a <Tab> character represents
-vim.opt.tabstop = 2
+vim.opt.tabstop = 4
 -- Number of spaces to use for each step of automatic indentation
-vim.opt.shiftwidth = 2
+vim.opt.shiftwidth = 4
 -- Number of spaces that a <Tab> counts for during editing operations
-vim.opt.softtabstop = 2
+vim.opt.softtabstop = 4
 -- Converts tabs into spaces when typing
 vim.opt.expandtab = true
 -- Automatically inserts an extra level of indentation in some cases
@@ -39,25 +39,25 @@ vim.opt.wrap = false
 vim.bo.autocomplete = vim.bo.buftype ~= 'prompt'
 
 vim.pack.add({
-  -- Color theme
-  {src = "https://github.com/neanias/everforest-nvim"},
-  -- Config for lsp
-  {src = "https://github.com/neovim/nvim-lspconfig"},
-  -- File picker
-  {src = "https://github.com/folke/snacks.nvim"},
-  -- File browser
-  {src = "https://github.com/X3eRo0/dired.nvim"},
-  -- Dired dependency
-  {src = "https://github.com/MunifTanjim/nui.nvim"},
-  -- Emacs compile mode in nvim
-  {src = "https://github.com/ej-shafran/compile-mode.nvim"},
-  {src = "https://github.com/nvim-lua/plenary.nvim"},
+    -- Color theme
+    {src = "https://github.com/neanias/everforest-nvim"},
+    -- Config for lsp
+    {src = "https://github.com/neovim/nvim-lspconfig"},
+    -- File picker
+    {src = "https://github.com/folke/snacks.nvim"},
+    -- File browser
+    {src = "https://github.com/X3eRo0/dired.nvim"},
+    -- Dired dependency
+    {src = "https://github.com/MunifTanjim/nui.nvim"},
+    -- Emacs compile mode in nvim
+    {src = "https://github.com/ej-shafran/compile-mode.nvim"},
+    {src = "https://github.com/nvim-lua/plenary.nvim"},
 
-  {src = 'https://github.com/nvim-tree/nvim-web-devicons'},
-  {src = 'https://github.com/nvim-lualine/lualine.nvim'},
+    {src = 'https://github.com/nvim-tree/nvim-web-devicons'},
+    {src = 'https://github.com/nvim-lualine/lualine.nvim'},
 
-  -- Treesitter
-  {src = "https://github.com/nvim-treesitter/nvim-treesitter"},
+    -- Treesitter
+    {src = "https://github.com/nvim-treesitter/nvim-treesitter"},
 })
 
 vim.opt.background = "light"
@@ -65,34 +65,34 @@ vim.opt.background = "light"
 
 local everforest = require("everforest")
 everforest.setup({
-  background = "soft",
+    background = "soft",
 })
 
 require('lualine').setup({
-  options = {
-    theme = "everforest",
-  },
+    options = {
+        theme = "everforest",
+    },
 })
 
 everforest.load()
 
 vim.api.nvim_create_autocmd("LspAttach", {
-  group = vim.api.nvim_create_augroup("lsp_completion", { clear = true }),
-  callback = function(args)
-    local client_id = args.data.client_id
-    if not client_id then
-      return
-    end
+    group = vim.api.nvim_create_augroup("lsp_completion", { clear = true }),
+    callback = function(args)
+        local client_id = args.data.client_id
+        if not client_id then
+            return
+        end
 
-    local client = vim.lsp.get_client_by_id(client_id)
-    if client and client:supports_method("textDocument/completion") then
-      -- Enable native LSP completion for this client + buffer
-      vim.lsp.completion.enable(true, client_id, args.buf, {
-        autotrigger = true,   -- auto-show menu as you type (recommended)
-        -- You can also set { autotrigger = false } and trigger manually with <C-x><C-o>
-      })
-    end
-  end,
+        local client = vim.lsp.get_client_by_id(client_id)
+        if client and client:supports_method("textDocument/completion") then
+            -- Enable native LSP completion for this client + buffer
+            vim.lsp.completion.enable(true, client_id, args.buf, {
+                autotrigger = true,   -- auto-show menu as you type (recommended)
+                -- You can also set { autotrigger = false } and trigger manually with <C-x><C-o>
+            })
+        end
+    end,
 })
 
 vim.lsp.enable('lua_ls')
@@ -100,7 +100,7 @@ vim.lsp.enable('lua_ls')
 require('vim._core.ui2').enable({})
 
 require('dired').setup({
-  override_cwd = false,
+    override_cwd = false,
 })
 
 -- I find <leader>w to be easier to use window keybinds
@@ -140,14 +140,14 @@ vim.keymap.set('n', '<C-c><C-r>', function() compile_mode.recompile() end)
 
 local treesitter = require('nvim-treesitter')
 treesitter.setup {
-  -- Directory to install parsers and queries to (prepended to `runtimepath` to have priority)
-  install_dir = vim.fn.stdpath('data') .. '/site'
+    -- Directory to install parsers and queries to (prepended to `runtimepath` to have priority)
+    install_dir = vim.fn.stdpath('data') .. '/site'
 }
 
-local treesitter_supported = { 'rust', 'c', 'typst', 'bash', 'lua' }
+local treesitter_supported = { 'rust', 'c', 'cpp', 'typst', 'bash', 'lua' }
 treesitter.install(treesitter_supported)
 
 vim.api.nvim_create_autocmd('FileType', {
-  pattern = treesitter_supported,
-  callback = function() vim.treesitter.start() end,
+    pattern = treesitter_supported,
+    callback = function() vim.treesitter.start() end,
 })
