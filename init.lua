@@ -58,6 +58,9 @@ vim.pack.add({
 
     -- Treesitter
     {src = "https://github.com/nvim-treesitter/nvim-treesitter"},
+
+    -- Nice scrollbar
+    {src = "https://github.com/lewis6991/satellite.nvim"},
 })
 
 vim.opt.background = "light"
@@ -151,3 +154,7 @@ vim.api.nvim_create_autocmd('FileType', {
     pattern = treesitter_supported,
     callback = function() vim.treesitter.start() end,
 })
+
+require("hlslens-setup")
+require("gitsigns-setup")
+
