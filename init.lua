@@ -55,6 +55,9 @@ vim.pack.add({
 
   {src = 'https://github.com/nvim-tree/nvim-web-devicons'},
   {src = 'https://github.com/nvim-lualine/lualine.nvim'},
+
+  -- Treesitter
+  {src = "https://github.com/nvim-treesitter/nvim-treesitter"},
 })
 
 vim.opt.background = "light"
@@ -112,6 +115,21 @@ vim.keymap.set('n', '<leader>sw', function() Snacks.picker.grep_word() end)
 
 vim.keymap.set('n', '<leader>gg', function() Snacks.lazygit() end)
 
+vim.keymap.set('n', "gd", function() Snacks.picker.lsp_definitions() end)
+vim.keymap.set('n', "gD", function() Snacks.picker.lsp_declarations() end)
+vim.keymap.set('n', "gr", function() Snacks.picker.lsp_references() end)
+vim.keymap.set('n', "gI", function() Snacks.picker.lsp_implementations() end)
+vim.keymap.set('n', "gy", function() Snacks.picker.lsp_type_definitions() end)
+vim.keymap.set('n', "gai", function() Snacks.picker.lsp_incoming_calls() end)
+vim.keymap.set('n', "gao", function() Snacks.picker.lsp_outgoing_calls() end)
+
+-- Create some toggle mappings
+Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
+Snacks.toggle.option("wrap", { name = "Wrap" }):map("<leader>uw")
+Snacks.toggle.diagnostics():map("<leader>ud")
+Snacks.toggle.option("conceallevel", { off = 0, on = vim.o.conceallevel > 0 and vim.o.conceallevel or 2 }):map("<leader>uc")
+Snacks.toggle.inlay_hints():map("<leader>uh")
+
 vim.keymap.set('n', '<leader>d', ':Dired %<cr>')
 
 local compile_mode = require('compile-mode')
@@ -120,3 +138,16 @@ vim.g.compile_mode = {}
 vim.keymap.set('n', '<C-c><C-c>', function() compile_mode.compile() end)
 vim.keymap.set('n', '<C-c><C-r>', function() compile_mode.recompile() end)
 
+local treesitter = require('nvim-treesitter')
+treesitter.setup {
+  -- Directory to install parsers and queries to (prepended to `runtimepath` to have priority)
+  install_dir = vim.fn.stdpath('data') .. '/site'
+}
+
+local treesitter_supported = { 'rust', 'c', 'typst', 'bash', 'lua' }
+treesitter.install(treesitter_supported)
+
+vim.api.nvim_create_autocmd('FileType', {
+  pattern = treesitter_supported,
+  callback = function() vim.treesitter.start() end,
+})
