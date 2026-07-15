@@ -63,6 +63,9 @@ vim.pack.add({
 
     -- Nice scrollbar
     {src = "https://github.com/lewis6991/satellite.nvim"},
+
+    -- Surround shortcuts
+    {src = "https://github.com/kylechui/nvim-surround"},
 })
 
 vim.opt.background = "light"
@@ -122,11 +125,13 @@ vim.keymap.set('n', '<leader>gg', function() Snacks.lazygit() end)
 
 vim.keymap.set('n', "gd", function() Snacks.picker.lsp_definitions() end)
 vim.keymap.set('n', "gD", function() Snacks.picker.lsp_declarations() end)
-vim.keymap.set('n', "gr", function() Snacks.picker.lsp_references() end)
-vim.keymap.set('n', "gI", function() Snacks.picker.lsp_implementations() end)
-vim.keymap.set('n', "gy", function() Snacks.picker.lsp_type_definitions() end)
+vim.keymap.set('n', "grr", function() Snacks.picker.lsp_references() end)
+vim.keymap.set('n', "gri", function() Snacks.picker.lsp_implementations() end)
+vim.keymap.set('n', "grt", function() Snacks.picker.lsp_type_definitions() end)
 vim.keymap.set('n', "gai", function() Snacks.picker.lsp_incoming_calls() end)
 vim.keymap.set('n', "gao", function() Snacks.picker.lsp_outgoing_calls() end)
+
+vim.keymap.set('n', "grf", function() vim.lsp.buf.format() end)
 
 -- Create some toggle mappings
 Snacks.toggle.option("spell", { name = "Spelling" }):map("<leader>us")
@@ -153,8 +158,22 @@ local treesitter_supported = { 'rust', 'c', 'cpp', 'typst', 'bash', 'lua' }
 treesitter.install(treesitter_supported)
 
 vim.api.nvim_create_autocmd('FileType', {
-    pattern = treesitter_supported,
-    callback = function() vim.treesitter.start() end,
+    group = vim.api.nvim_create_augroup("tree-sitter-enable", { enable = true }),
+    callback = function(args)
+        local lang = vim.treesitter.language.get_lang(args.match)
+        if not lang or not vim.treesitter.language.add(lang) then return end
+
+        if vim.treesitter.query.get(lang, "highlights") then vim.treesitter.start(args.buf) end
+
+        if vim.treesitter.query.get(lang, "indents") then
+            vim.opt_local.indentexpr = 'v:lua.require("nvim-treesitter").indentexpr()'
+        end
+
+        if vim.treesitter.query.get(lang, "folds") then
+            vim.opt_local.foldmethod = "expr"
+            vim.opt_local.foldexpr = "v:lua.vim.treesitter.foldexpr()"
+  end
+    end,
 })
 
 require("hlslens-setup")
