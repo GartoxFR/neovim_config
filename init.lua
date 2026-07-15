@@ -96,7 +96,9 @@ vim.lsp.enable('lua_ls')
 
 require('vim._core.ui2').enable({})
 
-require('dired').setup({})
+require('dired').setup({
+  override_cwd = false,
+})
 
 -- I find <leader>w to be easier to use window keybinds
 vim.keymap.set('n', '<leader>w', '<C-w>')
