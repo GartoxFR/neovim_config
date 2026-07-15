@@ -35,7 +35,8 @@ vim.opt.smarttab = true
 -- No line wrap by default
 vim.opt.wrap = false
 
-vim.o.autocomplete = true
+-- We want to enable autocomplete only in non promt buffers
+vim.bo.autocomplete = vim.bo.buftype ~= 'prompt'
 
 vim.pack.add({
   -- Color theme
