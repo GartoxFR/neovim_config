@@ -171,6 +171,9 @@ require('dired').setup({
 -- I find <leader>w to be easier to use window keybinds
 vim.keymap.set('n', '<leader>w', '<C-w>')
 
+-- Goto last buffer
+vim.keymap.set('n', '<leader>,', ':b#<CR>', {silent = true})
+
 local Snacks = require('snacks')
 Snacks.setup({})
 vim.keymap.set('n', '<leader><space>', function() Snacks.picker.smart() end)
