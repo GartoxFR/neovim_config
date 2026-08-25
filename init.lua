@@ -58,7 +58,6 @@ vim.pack.add({
     { src = "https://github.com/nvim-lua/plenary.nvim" },
 
     { src = 'https://github.com/nvim-tree/nvim-web-devicons' },
-    { src = 'https://github.com/nvim-lualine/lualine.nvim' },
 
     -- Treesitter
     { src = "https://github.com/nvim-treesitter/nvim-treesitter" },
@@ -68,6 +67,7 @@ vim.pack.add({
 
     -- Surround shortcuts
     { src = "https://github.com/kylechui/nvim-surround" },
+
 })
 
 vim.lsp.config("rust_analyzer", {
@@ -133,12 +133,6 @@ everforest.setup({
     background = "soft",
 })
 
-require('lualine').setup({
-    options = {
-        theme = "everforest",
-    },
-})
-
 everforest.load()
 
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -172,7 +166,7 @@ require('dired').setup({
 vim.keymap.set('n', '<leader>w', '<C-w>')
 
 -- Goto last buffer
-vim.keymap.set('n', '<leader>,', ':b#<CR>', {silent = true})
+vim.keymap.set('n', '<leader>,', ':b#<CR>', { silent = true })
 
 local Snacks = require('snacks')
 Snacks.setup({})
@@ -180,6 +174,7 @@ vim.keymap.set('n', '<leader><space>', function() Snacks.picker.smart() end)
 vim.keymap.set('n', '<leader>.', function() Snacks.picker.buffers() end)
 vim.keymap.set('n', '<leader>sg', function() Snacks.picker.grep() end)
 vim.keymap.set('n', '<leader>sw', function() Snacks.picker.grep_word() end)
+vim.keymap.set('n', "<leader>sd", function() Snacks.picker.diagnostics() end)
 
 vim.keymap.set('n', '<leader>gg', function() Snacks.lazygit() end)
 
@@ -237,5 +232,6 @@ vim.api.nvim_create_autocmd('FileType', {
     end,
 })
 
+require("lualine-setup")
 require("hlslens-setup")
 require("gitsigns-setup")

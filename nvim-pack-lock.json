@@ -16,6 +16,10 @@
       "rev": "25050e4ed39e628282831d4cbecb1850454ce915",
       "src": "https://github.com/lewis6991/gitsigns.nvim"
     },
+    "lsp-progress.nvim": {
+      "rev": "f6d5af10563b895ff846346f57cbd4451439f4c1",
+      "src": "https://github.com/linrongbin16/lsp-progress.nvim"
+    },
     "lualine.nvim": {
       "rev": "221ce6b2d999187044529f49da6554a92f740a96",
       "src": "https://github.com/nvim-lualine/lualine.nvim"
